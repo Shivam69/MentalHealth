@@ -1,17 +1,13 @@
 /**
  * @format
  */
-
 import 'react-native';
 import React from 'react';
 import App from '../App';
+import { render } from '@testing-library/react-native';
+import { it } from '@jest/globals';
 
-// Note: import explicitly to use the types shipped with jest.
-import {it} from '@jest/globals';
-
-// Note: test renderer must be required after react-native.
-import renderer from 'react-test-renderer';
-
+// Test if the app renders without crashing
 it('renders correctly', () => {
-  renderer.create(<App />);
+  render(<App />);
 });

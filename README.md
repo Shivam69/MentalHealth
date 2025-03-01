@@ -1,79 +1,148 @@
-This is a new [**React Native**](https://reactnative.dev) project, bootstrapped using [`@react-native-community/cli`](https://github.com/react-native-community/cli).
+# MentalHealthApp
 
-# Getting Started
+A React Native mobile application focused on improving mental health and wellness through daily activities, guided meditations, and progress tracking.
 
->**Note**: Make sure you have completed the [React Native - Environment Setup](https://reactnative.dev/docs/environment-setup) instructions till "Creating a new application" step, before proceeding.
+## Overview
 
-## Step 1: Start the Metro Server
+MentalHealthApp provides users with personalized mental wellness activities throughout the day, tracks wellness metrics, and encourages daily habits that promote better mental health.
 
-First, you will need to start **Metro**, the JavaScript _bundler_ that ships _with_ React Native.
+## Features
 
-To start Metro, run the following command from the _root_ of your React Native project:
+- **Daily Activities**: Structured morning, afternoon, and evening activities
+- **Wellness Dashboard**: Track key wellness metrics like mental wellbeing, work-life balance, and self-efficacy
+- **Audio Guided Sessions**: Listen to guided meditations, techniques, and exercises
+- **Progress Tracking**: Monitor your completion progress and growth areas
+- **Reminders**: Set reminders to stay consistent with your wellness routine
+
+## Screenshots
+
+[Screenshots would be added here]
+
+## Installation
 
 ```bash
-# using npm
+# Clone the repository
+git clone https://github.com/yourusername/MentalHealthApp.git
+
+# Navigate to project directory
+cd MentalHealthApp
+
+# Install dependencies
+npm install
+
+# Start Metro bundler
 npm start
 
-# OR using Yarn
-yarn start
-```
-
-## Step 2: Start your Application
-
-Let Metro Bundler run in its _own_ terminal. Open a _new_ terminal from the _root_ of your React Native project. Run the following command to start your _Android_ or _iOS_ app:
-
-### For Android
-
-```bash
-# using npm
-npm run android
-
-# OR using Yarn
-yarn android
-```
-
-### For iOS
-
-```bash
-# using npm
+# Run on iOS
 npm run ios
 
-# OR using Yarn
-yarn ios
+# Run on Android
+npm run android
 ```
 
-If everything is set up _correctly_, you should see your new app running in your _Android Emulator_ or _iOS Simulator_ shortly provided you have set up your emulator/simulator correctly.
+## Technologies
 
-This is one way to run your app — you can also run it directly from within Android Studio and Xcode respectively.
+- React Native (v0.76.7)
+- React Navigation (v7)
+- React Native SVG
+- React Native Sound
+- React Native Reanimated
 
-## Step 3: Modifying your App
+## Project Structure
 
-Now that you have successfully run the app, let's modify it.
+```
+MentalHealthApp/
+├── components/
+│   ├── ActivityItem.js       # Individual activity component
+│   ├── DailyActivities.js    # Container for daily activities
+│   ├── ProgressCircle.js     # Circular progress indicator
+│   └── WellnessDashboard.js  # Wellness metrics dashboard
+├── screens/
+│   └── HomeScreen.js         # Main home screen
+├── assets/
+│   ├── header_Bg.png
+│   ├── playBtn.png
+│   └── checked.png
+└── [other project files]
+```
 
-1. Open `App.tsx` in your text editor of choice and edit some lines.
-2. For **Android**: Press the <kbd>R</kbd> key twice or select **"Reload"** from the **Developer Menu** (<kbd>Ctrl</kbd> + <kbd>M</kbd> (on Window and Linux) or <kbd>Cmd ⌘</kbd> + <kbd>M</kbd> (on macOS)) to see your changes!
+## Key Components
 
-   For **iOS**: Hit <kbd>Cmd ⌘</kbd> + <kbd>R</kbd> in your iOS Simulator to reload the app and see your changes!
+### HomeScreen
 
-## Congratulations! :tada:
+The main screen of the application displaying the wellness dashboard and daily activities.
 
-You've successfully run and modified your React Native App. :partying_face:
+### DailyActivities
 
-### Now what?
+Manages the display and interaction with morning, afternoon, and evening wellness activities.
 
-- If you want to add this new React Native code to an existing application, check out the [Integration guide](https://reactnative.dev/docs/integration-with-existing-apps).
-- If you're curious to learn more about React Native, check out the [Introduction to React Native](https://reactnative.dev/docs/getting-started).
+### WellnessDashboard
 
-# Troubleshooting
+Displays key wellness metrics using circular progress indicators.
 
-If you can't get this to work, see the [Troubleshooting](https://reactnative.dev/docs/troubleshooting) page.
+### ActivityItem
 
-# Learn More
+Individual activity card with play/pause functionality and completion tracking.
 
-To learn more about React Native, take a look at the following resources:
+## Development
 
-- [React Native Website](https://reactnative.dev) - learn more about React Native.
-- [Getting Started](https://reactnative.dev/docs/environment-setup) - an **overview** of React Native and how setup your environment.
-- [Learn the Basics](https://reactnative.dev/docs/getting-started) - a **guided tour** of the React Native **basics**.
-- [Blog](https://reactnative.dev/blog) - read the latest official React Native **Blog** posts.
-- [`@facebook/react-native`](https://github.com/facebook/react-native) - the Open Source; GitHub **repository** for React Native.
+### Prerequisites
+
+- Node.js >= 18
+- React Native CLI
+- Xcode (for iOS development)
+- Android Studio (for Android development)
+
+### Running Tests
+
+```bash
+npm test
+```
+
+### Linting
+
+```bash
+npm run lint
+```
+
+## Audio Assets
+
+The application uses the following audio files which should be added to the project:
+- meditation_audio.mp3
+- technique_audio.mp3
+- exercise_audio.mp3
+
+## Customization
+
+### Activity Types
+
+The app supports several activity types:
+- Meditation
+- Technique
+- Exercise
+- Session
+- Journal
+- Assessment
+
+### Wellness Metrics
+
+Track progress in:
+- Mental Wellbeing
+- Work-Life Balance
+- Self Efficacy
+
+## Contributing
+
+1. Fork the repository
+2. Create your feature branch (`git checkout -b feature/amazing-feature`)
+3. Commit your changes (`git commit -m 'Add some amazing feature'`)
+4. Push to the branch (`git push origin feature/amazing-feature`)
+5. Open a Pull Request
+
+## License
+
+[License information would go here]
+
+## Acknowledgements
+
+- [Any libraries, resources, or inspirations would be listed here]
