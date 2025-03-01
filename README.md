@@ -22,7 +22,7 @@ MentalHealthApp provides users with personalized mental wellness activities thro
 
 ```bash
 # Clone the repository
-git clone https://github.com/yourusername/MentalHealthApp.git
+git clone https://github.com/Shivam69/MentalHealth.git
 
 # Navigate to project directory
 cd MentalHealthApp
