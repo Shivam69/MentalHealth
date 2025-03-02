@@ -53,16 +53,20 @@ npm run android
 ```
 MentalHealthApp/
 ├── components/
-│   ├── ActivityItem.js       # Individual activity component
-│   ├── DailyActivities.js    # Container for daily activities
+│   ├── ActivityItem.js       # Individual activity card
+│   ├── DailyActivities.js    # Manages morning, afternoon & evening routines
 │   ├── ProgressCircle.js     # Circular progress indicator
-│   └── WellnessDashboard.js  # Wellness metrics dashboard
+│   └── WellnessDashboard.js  # Displays wellness metrics
 ├── screens/
-│   └── HomeScreen.js         # Main home screen
+│   └── HomeScreen.js         # Main dashboard screen
 ├── assets/
 │   ├── header_Bg.png
 │   ├── playBtn.png
 │   └── checked.png
+├── tests/                    # Test cases directory
+│   ├── ActivityItem.test.js   # Tests for activity component
+│   ├── DailyActivities.test.js # Tests for daily activities module
+│   ├── WellnessDashboard.test.js # Tests for wellness dashboard
 └── [other project files]
 ```
 
@@ -138,11 +142,3 @@ Track progress in:
 3. Commit your changes (`git commit -m 'Add some amazing feature'`)
 4. Push to the branch (`git push origin feature/amazing-feature`)
 5. Open a Pull Request
-
-## License
-
-[License information would go here]
-
-## Acknowledgements
-
-- [Any libraries, resources, or inspirations would be listed here]
