@@ -1,5 +1,6 @@
 import React from "react";
 import { View, Text, StyleSheet, TouchableOpacity, Image } from "react-native";
+import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 
 const ActivityItem = ({ 
   title, 
@@ -19,10 +20,12 @@ const ActivityItem = ({
           <Text style={styles.nowPlayingActivity}>{title}</Text>
           <View style={styles.audioContainer}>
           <TouchableOpacity style={styles.playPauseButton} testID="activity-item" onPress={onPress}>
+            {isPlaying ?  <Icon name="pause" size={14} color="white" /> : <Icon name="play" size={14} color="white" />}
             <Text style={styles.playPauseButtonText}>{isPlaying ? "Pause" : "Resume"}</Text>
           </TouchableOpacity>
           <TouchableOpacity style={styles.completeButton} onPress={onComplete}>
-            <Text style={styles.completeButtonText}>✓ Mark as Complete</Text>
+          <Icon name="check" size={14} color="#194b5f" />
+            <Text style={styles.completeButtonText}> Mark as Complete</Text>
           </TouchableOpacity>
           </View>
         </View>
@@ -107,7 +110,8 @@ const styles = StyleSheet.create({
     paddingHorizontal: 15,
     borderRadius: 20,
     marginBottom: 10,
-    alignSelf: "flex-start",
+    flexDirection:'row',
+    alignItems:'center'
   },
   playPauseButtonText: {
     color: "white",
@@ -122,6 +126,8 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: "#194b5f",
     alignSelf: "flex-start",
+    flexDirection:'row',
+    alignItems:'center'
   },
   completeButtonText: {
     color: "#194b5f",

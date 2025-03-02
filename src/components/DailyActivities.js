@@ -1,5 +1,15 @@
 import React, { useState, useEffect, useMemo, useCallback } from "react";
-import { View, Text, StyleSheet, ScrollView, Image, TouchableOpacity, Alert } from "react-native";
+import { 
+  View, 
+  Text, 
+  StyleSheet, 
+  ScrollView, 
+  Image, 
+  TouchableOpacity, 
+  Alert,
+  Modal,
+  Switch
+} from "react-native";
 import Sound from 'react-native-sound';
 import ActivityItem from "./ActivityItem";
 import Svg, { Circle, Rect } from "react-native-svg";
@@ -42,12 +52,75 @@ const ActivitySection = React.memo(({
   </View>
 ));
 
+const ReminderModal = ({ visible, onClose, onSave }) => {
+  const [reminderTimes, setReminderTimes] = useState({
+    "8:00 AM": false,
+    "12:00 PM": false,
+    "4:00 PM": false,
+  });
+
+  const toggleReminder = (time) => {
+    setReminderTimes(prev => ({
+      ...prev,
+      [time]: !prev[time]
+    }));
+  };
+
+  const handleSave = () => {
+    onSave(reminderTimes);
+    onClose();
+  };
+
+  return (
+    <Modal
+      animationType="slide"
+      transparent={true}
+      visible={visible}
+      onRequestClose={onClose}
+    >
+      <View style={styles.modalOverlay}>
+        <View style={styles.modalContent}>
+          <View style={styles.modalHandle} />
+          
+          <Text style={styles.modalTitle}>Set Daily Reminders</Text>
+          <Text style={styles.modalSubtitle}>Choose the times you'd like to receive reminders</Text>
+          
+          {Object.keys(reminderTimes).map((time) => (
+            <View key={time} style={styles.reminderItem}>
+              <Text style={styles.reminderTime}>{time}</Text>
+              <Switch
+                trackColor={{ false: "#D9D9D9", true: "#B3E5FC" }}
+                thumbColor={reminderTimes[time] ? "#194b5f" : "#f4f3f4"}
+                ios_backgroundColor="#D9D9D9"
+                onValueChange={() => toggleReminder(time)}
+                value={reminderTimes[time]}
+              />
+            </View>
+          ))}
+          
+          <View style={styles.modalButtons}>
+            <TouchableOpacity style={styles.cancelButton} onPress={onClose}>
+              <Text style={styles.cancelButtonText}>Cancel</Text>
+            </TouchableOpacity>
+            
+            <TouchableOpacity style={styles.saveButton} onPress={handleSave}>
+              <Text style={styles.saveButtonText}>Save</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+      </View>
+    </Modal>
+  );
+};
+
 const DailyActivities = ({ activities }) => {
   const [completedActivities, setCompletedActivities] = useState([]);
   const [isPlaying, setIsPlaying] = useState(false);
   const [currentActivity, setCurrentActivity] = useState(null);
   const [sound, setSound] = useState(null);
   const [reminderStatus, setReminderStatus] = useState(false);
+  const [modalVisible, setModalVisible] = useState(false);
+  const [activeReminders, setActiveReminders] = useState({});
   
   useEffect(() => () => sound?.release(), [sound]);
 
@@ -89,52 +162,80 @@ const DailyActivities = ({ activities }) => {
     return hour < 12 ? "Good morning" : hour < 18 ? "Good afternoon" : "Good evening";
   };
 
+  const handleSetReminders = (reminderTimes) => {
+    setActiveReminders(reminderTimes);
+    const hasActiveReminders = Object.values(reminderTimes).some(value => value === true);
+    setReminderStatus(hasActiveReminders);
+    
+    // Here you would implement actual reminder notifications
+    if (hasActiveReminders) {
+      Alert.alert(
+        "Reminders Set", 
+        `You will be notified at the selected times.`,
+        [{ text: "OK" }]
+      );
+    }
+  };
+
   return (
-    <ScrollView style={styles.container}>
-      <View style={styles.header}>
-        <View style={styles.headerContent}>
-          <View style={styles.textContainer}>
-            <Text style={styles.greeting}>{getGreeting()}</Text>
-            <Text style={styles.subheading}>Try these activities daily to improve mental health & productivity</Text>
-            <TouchableOpacity
-              style={[styles.reminderButton, reminderStatus && styles.reminderButtonActive]}
-              onPress={() => setReminderStatus(prev => !prev)}
-            >
-              <Text style={[styles.reminderButtonText, reminderStatus && styles.reminderButtonTextActive]}>🔔 Set reminder</Text>
-            </TouchableOpacity>
+    <>
+      <ScrollView style={styles.container}>
+        <View style={styles.header}>
+          <View style={styles.headerContent}>
+            <View style={styles.textContainer}>
+              <Text style={styles.greeting}>{getGreeting()}</Text>
+              <Text style={styles.subheading}>Try these activities daily to improve mental health & productivity</Text>
+              <TouchableOpacity
+                style={[styles.reminderButton, reminderStatus && styles.reminderButtonActive]}
+                onPress={() => setModalVisible(true)}
+              >
+                <Text style={[styles.reminderButtonText, reminderStatus && styles.reminderButtonTextActive]}>
+                  🔔 {reminderStatus ? "Reminders set" : "Set reminder"}
+                </Text>
+              </TouchableOpacity>
+            </View>
+            <Image source={require("../assets/header_Bg.png")} style={styles.headerImage} resizeMode="contain" />
           </View>
-          <Image source={require("../assets/header_Bg.png")} style={styles.headerImage} resizeMode="contain" />
         </View>
-      </View>
 
-      <View style={styles.progressContainer}>
-        <Text style={styles.progressText}>{completedCount >= 3 ? `Goal reached! ${completedCount}/${totalActivities}` : `Complete ${3 - completedCount} more to stay focused`}</Text>
-        <Svg width={350} height={12}>
-          <Rect x="0" y="4" width="350" height="4" fill="#D9D9D9" rx="2" />
-          <Rect x="0" y="4" width={progressPosition} height="4" fill="#194b5f" rx="2" />
-          <Circle cx={progressPosition} cy="6" r="6" fill="#194b5f" />
-        </Svg>
-        <Text style={styles.participantsText}>🔥 2615 people are doing sessions with you this hour</Text>
-      </View>
+        <View style={styles.progressContainer}>
+          <Text style={styles.progressText}>
+            {completedCount >= 3 
+              ? `Goal reached! ${completedCount}/${totalActivities}` 
+              : `Complete ${3 - completedCount} more to stay focused`}
+          </Text>
+          <Svg width={350} height={12}>
+            <Rect x="0" y="4" width="350" height="4" fill="#D9D9D9" rx="2" />
+            <Rect x="0" y="4" width={progressPosition} height="4" fill="#194b5f" rx="2" />
+            <Circle cx={progressPosition} cy="6" r="6" fill="#194b5f" />
+          </Svg>
+          <Text style={styles.participantsText}>🔥 2615 people are doing sessions with you this hour</Text>
+        </View>
 
-      {["Morning", "Afternoon", "Evening"].map(section => (
-        <ActivitySection 
-          key={section} 
-          title={section} 
-          activities={activities[section.toLowerCase()]} 
-          onActivityPress={handlePlayPause}
-          completedActivities={completedActivities}
-          currentActivity={currentActivity}
-          isPlaying={isPlaying}
-          handleCompleteActivity={handleCompleteActivity}
-          sound={sound}
-          setIsPlaying={setIsPlaying}
-        />
-      ))}
-    </ScrollView>
+        {["Morning", "Afternoon", "Evening"].map(section => (
+          <ActivitySection 
+            key={section} 
+            title={section} 
+            activities={activities[section.toLowerCase()]} 
+            onActivityPress={handlePlayPause}
+            completedActivities={completedActivities}
+            currentActivity={currentActivity}
+            isPlaying={isPlaying}
+            handleCompleteActivity={handleCompleteActivity}
+            sound={sound}
+            setIsPlaying={setIsPlaying}
+          />
+        ))}
+      </ScrollView>
+
+      <ReminderModal
+        visible={modalVisible}
+        onClose={() => setModalVisible(false)}
+        onSave={handleSetReminders}
+      />
+    </>
   );
 };
-
 
 // Styles
 const styles = StyleSheet.create({
@@ -185,7 +286,7 @@ const styles = StyleSheet.create({
     color: "white",
   },
   reminderButtonTextActive: {
-    color: "black",
+    color: "#194b5f",
   },
   headerImage: {
     height: "100%",
@@ -225,68 +326,89 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: "bold",
   },
-  quoteContainer: {
+  
+  // Modal styles
+  modalOverlay: {
+    flex: 1,
+    justifyContent: 'flex-end',
+    backgroundColor: 'rgba(0,0,0,0.5)',
+  },
+  modalContent: {
+    backgroundColor: 'white',
+    borderTopLeftRadius: 20,
+    borderTopRightRadius: 20,
     padding: 20,
-    marginTop: 10,
-    marginBottom: 40,
-    alignItems: "center",
+    paddingTop: 15,
+    elevation: 5,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: -3 },
+    shadowOpacity: 0.1,
+    shadowRadius: 5,
   },
-  quote: {
-    fontStyle: "italic",
-    textAlign: "center",
-    fontSize: 14,
-    color: "#666",
+  modalHandle: {
+    alignSelf: 'center',
+    width: 40,
+    height: 5,
+    borderRadius: 3,
+    backgroundColor: '#D9D9D9',
+    marginBottom: 20,
+  },
+  modalTitle: {
+    fontSize: 20,
+    fontWeight: 'bold',
+    color: '#194b5f',
     marginBottom: 10,
   },
-  quoteAuthor: {
-    fontSize: 12,
-    color: "#888",
+  modalSubtitle: {
+    fontSize: 14,
+    color: '#666',
+    marginBottom: 25,
   },
-  nowPlayingContainer: {
-    margin: 15,
-    padding: 15,
-    backgroundColor: "#f0f8ff",
-    borderRadius: 12,
-    borderLeftWidth: 4,
-    borderLeftColor: "#194b5f",
+  reminderItem: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    paddingVertical: 15,
+    borderBottomWidth: 1,
+    borderBottomColor: '#f0f0f0',
   },
-  nowPlayingTitle: {
+  reminderTime: {
     fontSize: 16,
-    fontWeight: "bold",
-    color: "#194b5f",
-    marginBottom: 5,
+    fontWeight: '500',
+    color: '#333',
   },
-  nowPlayingActivity: {
-    fontSize: 14,
-    color: "#333",
-    marginBottom: 12,
+  modalButtons: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    marginTop: 25,
   },
-  playPauseButton: {
-    backgroundColor: "#194b5f",
-    paddingVertical: 8,
-    paddingHorizontal: 15,
-    borderRadius: 20,
-    marginBottom: 10,
-    alignSelf: "flex-start",
+  saveButton: {
+    backgroundColor: '#194b5f',
+    borderRadius: 25,
+    paddingVertical: 15,
+    paddingHorizontal: 30,
+    alignItems: 'center',
+    flex: 1,
+    marginLeft: 10,
   },
-  playPauseButtonText: {
-    color: "white",
-    fontWeight: "600",
-    fontSize: 14,
+  saveButtonText: {
+    color: 'white',
+    fontWeight: 'bold',
+    fontSize: 16,
   },
-  completeButton: {
-    backgroundColor: "transparent",
-    paddingVertical: 8,
-    paddingHorizontal: 15,
-    borderRadius: 20,
-    borderWidth: 1,
-    borderColor: "#194b5f",
-    alignSelf: "flex-start",
+  cancelButton: {
+    backgroundColor: '#f0f0f0',
+    borderRadius: 25,
+    paddingVertical: 15,
+    paddingHorizontal: 30,
+    alignItems: 'center',
+    flex: 1,
+    marginRight: 10,
   },
-  completeButtonText: {
-    color: "#194b5f",
-    fontWeight: "600",
-    fontSize: 14,
+  cancelButtonText: {
+    color: '#333',
+    fontWeight: 'bold',
+    fontSize: 16,
   },
 });
 

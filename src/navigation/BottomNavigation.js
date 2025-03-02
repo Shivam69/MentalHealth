@@ -1,7 +1,7 @@
 import React from 'react';
-import { Text } from 'react-native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { NavigationContainer } from '@react-navigation/native';
+import Icon from 'react-native-vector-icons/FontAwesome'; // Import Vector Icons
 
 // Import screens
 import HomeScreen from '../screens/HomeScreen';
@@ -17,26 +17,25 @@ const BottomNavigation = () => {
     <NavigationContainer>
       <Tab.Navigator
         screenOptions={({ route }) => ({
-          tabBarIcon: ({ focused }) => {
-            let iconText;
+          tabBarIcon: ({ focused, color, size }) => {
+            let iconName;
             if (route.name === 'HOME') {
-              iconText = '🏠';
+              iconName = 'home';
             } else if (route.name === 'EXPLORE') {
-              iconText = '🔍';
+              iconName = 'search';
             } else if (route.name === 'CARE') {
-              iconText = '❤️';
+              iconName = 'heart';
             } else if (route.name === 'DAILY') {
-              iconText = '📅';
+              iconName = 'calendar';
             } else if (route.name === 'PROFILE') {
-              iconText = '👤';
+              iconName = 'user';
             }
-
-            return <Text style={{ fontSize: 20, color: focused ? 'white' : 'gray' }}>{iconText}</Text>;
+            return <Icon name={iconName} size={size} color={color} />;
           },
-          tabBarActiveTintColor: 'white', // Selected tab color
+          tabBarActiveTintColor: 'white',
           tabBarInactiveTintColor: 'gray',
           tabBarStyle: {
-            backgroundColor:'black',
+            backgroundColor: 'black',
             paddingVertical: 5,
             borderTopWidth: 0,
             elevation: 10,
